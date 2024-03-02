@@ -7,7 +7,6 @@ public class User {
     public User() {
 
     }
-    // this is the Admin signIn function, Customer class overrides this.
     public void signIn(String username, String password) throws SQLException {
         Database db = new Database();
         Connection conn = db.getConnection();
@@ -29,8 +28,8 @@ public class User {
         ps.close();
         rs.close();
     }
-
     public void signOut() {
-
+        System.exit(1);
+        System.out.println("Signed out, session over.");
     }
 }
