@@ -24,5 +24,13 @@ public class User {
         } else {
             System.out.println("Username or Password incorrect");
         }
+
+        conn.close();
+        ps.close();
+        rs.close();
+    }
+
+    public void signOut() {
+
     }
 }
