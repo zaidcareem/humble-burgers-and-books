@@ -19,23 +19,23 @@ public class Customer extends User {
         Connection conn = db.getConnection();
 
         // check whether username already exists
-        String checkQuery = "SELECT EXISTS(SELECT * FROM customers WHERE username = ?)";
+        String checkQuery = "SELECT * FROM customers WHERE username = ?";
         PreparedStatement ps1 = conn.prepareStatement(checkQuery);
         ps1.setString(1, this.username);
         ResultSet rs1 = ps1.executeQuery();
 
         // if username exists
-        if (rs1.getInt(1) == 1) {
+        if (rs1.next()) {
             System.out.println("Username already exists, try another please.");
-            ps1.close();
-            rs1.close();
-        // if username does not exist
+
+        // if username does not exist, that means customer can use that username
         } else {
+
             String sqlQuery = "INSERT INTO customers VALUES(?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, this.username);
             ps.setString(2, this.password);
-            ps.setFloat(3, 0);
+            ps.setFloat(3, 0); // initial cumulative cost is always 0 (third column is cumulative cost)
 
             System.out.println("Added customer " +  this.username + " to database.");
 
@@ -44,10 +44,12 @@ public class Customer extends User {
         }
 
         conn.close();
+        ps1.close();
+        rs1.close();
     }
 
     // customer Sign In
-    public void signIn() throws SQLException {
+    public boolean signIn() throws SQLException {
         Database db = new Database();
         Connection conn = db.getConnection();
 
@@ -60,13 +62,17 @@ public class Customer extends User {
 
         if (rs.next()) {
             System.out.println("Customer " + this.username + " is logged in.");
+            conn.close();
+            ps.close();
+            rs.close();
+            return true;
         } else {
             System.out.println("Username or Password incorrect");
+            conn.close();
+            ps.close();
+            rs.close();
+            return false;
         }
-
-        conn.close();
-        ps.close();
-        rs.close();
     }
 
     public float getCumulativeExpense() throws SQLException {
@@ -91,13 +97,13 @@ public class Customer extends User {
         Database db = new Database();
         Connection conn = db.getConnection();
 
-        String query = "SELECT EXISTS(SELECT * FROM books WHERE Title = ?)";
+        String query = "SELECT * FROM books WHERE Title = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setString(1, book.getTitle());
         ResultSet resultSet = preparedStatement.executeQuery();
 
         // 1 is returned if the book exists, otherwise 0
-        if (resultSet.getInt(1) == 1) {
+        if (resultSet.next()) {
             String sqlQuery = "UPDATE books SET InStock = InStock - 1 WHERE Title = ?";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, book.getTitle());
@@ -129,13 +135,13 @@ public class Customer extends User {
         Database db = new Database();
         Connection conn = db.getConnection();
 
-        String query = "SELECT EXISTS(SELECT * FROM burgers WHERE Type = ?)";
+        String query = "SELECT * FROM burgers WHERE Type = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setString(1, burger.getType());
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        // 1 is returned if the burger exists, otherwise 0
-        if (resultSet.getInt(1) == 1) {
+        // true is returned if the burger exists, otherwise false
+        if (resultSet.next()) {
             String sqlQuery = "UPDATE burgers SET InStock = InStock - 1 WHERE Type = ?";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, burger.getType());
@@ -156,7 +162,6 @@ public class Customer extends User {
         } else {
             System.out.println("Burger is not on database.");
         }
-
         conn.close();
         preparedStatement.close();
     }

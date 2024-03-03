@@ -9,7 +9,7 @@ public class Admin extends User {
     // there will be only one admin
     // this will be done through sql constraints
 
-    public Admin(String username, String password) throws SQLException {
+    public Admin(String username, String password) {
         super(username, password);
     }
 
@@ -45,13 +45,13 @@ public class Admin extends User {
         Connection conn = db.getConnection();
 
         // check whether the customer is actually in the database
-        String query = "SELECT EXISTS(SELECT * FROM customers WHERE username = ?)";
+        String query = "SELECT * FROM customers WHERE username = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setString(1, customer.username);
         ResultSet resultSet = preparedStatement.executeQuery();
 
         // if customer exists
-        if (resultSet.getInt(1) == 1) {
+        if (resultSet.next()) {
 
             String deleteQuery = "DELETE FROM customers WHERE username = ?";
             PreparedStatement preparedStatement1 = conn.prepareStatement(deleteQuery);
@@ -59,8 +59,10 @@ public class Admin extends User {
 
             // run the delete query
             preparedStatement1.executeUpdate();
-
             preparedStatement1.close();
+
+            System.out.println("Naughty customer " + customer.username + " removed successfully.");
+
         // if customer does not exist
         } else {
             System.out.println("Customer is not in the database");

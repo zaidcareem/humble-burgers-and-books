@@ -2,9 +2,12 @@ create database bnbshop;
 use bnbshop;
 show tables;
 select * from customers;
-select * from books;
+select * from admins;
+
+INSERT INTO customers VALUES ('jeff', '123', 500);
 
 SELECT EXISTS(SELECT * FROM books WHERE Title = 'knotting');
+SELECT EXISTS(SELECT * FROM customers WHERE username = 'zaid');
 
 create table books (
     Title varchar(50) not null,
