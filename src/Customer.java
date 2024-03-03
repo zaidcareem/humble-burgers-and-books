@@ -71,14 +71,16 @@ public class Customer extends User {
 
         String query = "SELECT EXISTS(SELECT * FROM books WHERE Title = ?)";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
-        preparedStatement.setString(1, book.title);
+        preparedStatement.setString(1, book.getTitle());
         ResultSet resultSet = preparedStatement.executeQuery();
 
+        // 1 is returned if the book exists, otherwise 0
         if (resultSet.getInt(1) == 1) {
             String sqlQuery = "UPDATE books SET InStock = InStock - 1 WHERE Title = ?";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setString(1, book.title);
+            ps.setString(1, book.getTitle());
 
+            // run the update query
             ps.executeUpdate();
 
             // update the CumulativeExpense on the customers table
@@ -94,7 +96,35 @@ public class Customer extends User {
         }
     }
 
-    public void buyBurgers(Burger burger) {
-        
+    // buy burgers, update cumulative expense of customer also
+    public void buyBurgers(Burger burger) throws SQLException {
+        Database db = new Database();
+        Connection conn = db.getConnection();
+
+        String query = "SELECT EXISTS(SELECT * FROM burgers WHERE Type = ?)";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setString(1, burger.getType());
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        // 1 is returned if the burger exists, otherwise 0
+        if (resultSet.getInt(1) == 1) {
+            String sqlQuery = "UPDATE burgers SET InStock = InStock - 1 WHERE Type = ?";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ps.setString(1, burger.getType());
+
+            // run the update query
+            ps.executeUpdate();
+
+            // update the CumulativeExpense on the customers table
+            String expenseUpdateQuery = "Update customers SET CumulativeExpense = CumulativeExpense + ? WHERE username = ?";
+            PreparedStatement preparedStatement1 = conn.prepareStatement(expenseUpdateQuery);
+            preparedStatement1.setFloat(1, burger.getPrice());
+            preparedStatement1.setString(2, this.username);
+
+            preparedStatement1.executeUpdate();
+
+        } else {
+            System.out.println("Burger is not on database.");
+        }
     }
 }
