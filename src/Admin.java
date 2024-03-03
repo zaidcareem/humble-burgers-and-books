@@ -4,6 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Admin extends User {
+
+    // no register function for admin because admin will be directly added to the database.
+    // there will be only one admin
+    // this will be done through sql constraints
+
     public Admin(String username, String password) throws SQLException {
         super(username, password);
     }
@@ -30,7 +35,6 @@ public class Admin extends User {
         rs.close();
     }
 
-
     // deletes a customer from the database
     public void removeCustomer(Customer customer) throws SQLException {
         Database db = new Database();
@@ -42,7 +46,9 @@ public class Admin extends User {
         preparedStatement.setString(1, customer.username);
         ResultSet resultSet = preparedStatement.executeQuery();
 
+        // if customer exists
         if (resultSet.getInt(1) == 1) {
+
             String deleteQuery = "DELETE FROM customers WHERE username = ?";
             PreparedStatement preparedStatement1 = conn.prepareStatement(deleteQuery);
             preparedStatement1.setString(1, customer.username);
@@ -51,6 +57,7 @@ public class Admin extends User {
             preparedStatement1.executeUpdate();
 
             preparedStatement1.close();
+        // if customer does not exist
         } else {
             System.out.println("Customer is not in the database");
         }

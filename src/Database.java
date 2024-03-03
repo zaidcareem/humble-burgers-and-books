@@ -10,12 +10,11 @@ import java.sql.SQLException;
 
 public class Database {
 
-    public Database() {}
-
     Connection link;
 
-    public Connection getConnection() {
+    public Database() {}
 
+    public Connection getConnection() {
         String user = "root";
         String password = "Password"; //Please enter your database password to access the database
         String databaseName = "bnbshop";
@@ -23,7 +22,6 @@ public class Database {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); // register the driver
             link = DriverManager.getConnection("jdbc:mysql://localhost/" + databaseName, user, password); // create connection
-
         } catch (ClassNotFoundException e) {
             System.out.println("Class Not Found Exception");
             e.printStackTrace();

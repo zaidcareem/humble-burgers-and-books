@@ -7,8 +7,9 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
     public void signOut() {
-        System.exit(1);
+        // System.exit(1);
         System.out.println("Signed out, session over.");
     }
 }

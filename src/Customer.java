@@ -68,7 +68,6 @@ public class Customer extends User {
 
     // buy books, updates cumulative expense of customers here also
     public void buyBook(Book book) throws SQLException {
-
         Database db = new Database();
         Connection conn = db.getConnection();
 
@@ -96,7 +95,6 @@ public class Customer extends User {
 
             ps.close();
             preparedStatement1.close();
-
         } else {
             System.out.println("Book is not on database.");
         }
@@ -135,7 +133,6 @@ public class Customer extends User {
 
             preparedStatement1.executeUpdate();
             preparedStatement1.close();
-
         } else {
             System.out.println("Burger is not on database.");
         }
