@@ -5,13 +5,8 @@ import java.sql.SQLException;
 
 public class Customer extends User {
 
-    protected String username;
-    protected String password;
-
     public Customer(String username, String password) {
-        super();
-        this.username = username;
-        this.password = password;
+        super(username, password);
     }
 
     // customer Register
@@ -26,6 +21,9 @@ public class Customer extends User {
         ps.setFloat(3, 0);
 
         ps.executeUpdate();
+
+        conn.close();
+        ps.close();
     }
 
     // customer Sign In
@@ -61,11 +59,16 @@ public class Customer extends User {
 
         ResultSet rs = ps.executeQuery();
 
+        conn.close();
+        ps.close();
+        rs.close();
+
         return rs.getFloat(1);
     }
 
     // buy books, updates cumulative expense of customers here also
     public void buyBook(Book book) throws SQLException {
+
         Database db = new Database();
         Connection conn = db.getConnection();
 
@@ -91,13 +94,20 @@ public class Customer extends User {
 
             preparedStatement1.executeUpdate();
 
+            ps.close();
+            preparedStatement1.close();
+
         } else {
             System.out.println("Book is not on database.");
         }
+
+        conn.close();
+        preparedStatement.close();
+        resultSet.close();
     }
 
     // buy burgers, update cumulative expense of customer also
-    public void buyBurgers(Burger burger) throws SQLException {
+    public void buyBurger(Burger burger) throws SQLException {
         Database db = new Database();
         Connection conn = db.getConnection();
 
@@ -115,6 +125,8 @@ public class Customer extends User {
             // run the update query
             ps.executeUpdate();
 
+            ps.close();
+
             // update the CumulativeExpense on the customers table
             String expenseUpdateQuery = "Update customers SET CumulativeExpense = CumulativeExpense + ? WHERE username = ?";
             PreparedStatement preparedStatement1 = conn.prepareStatement(expenseUpdateQuery);
@@ -122,9 +134,13 @@ public class Customer extends User {
             preparedStatement1.setString(2, this.username);
 
             preparedStatement1.executeUpdate();
+            preparedStatement1.close();
 
         } else {
             System.out.println("Burger is not on database.");
         }
+
+        conn.close();
+        preparedStatement.close();
     }
 }
