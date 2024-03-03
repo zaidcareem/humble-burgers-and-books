@@ -13,7 +13,7 @@ public class Admin extends User {
         super(username, password);
     }
 
-    public void signIn() throws SQLException {
+    public boolean signIn() throws SQLException {
         Database db = new Database();
         Connection conn = db.getConnection();
 
@@ -25,14 +25,18 @@ public class Admin extends User {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-            System.out.println("Admin " + this.username + " is logged in.");
+            System.out.println("Admin " + this.username + " is logged in.\n");
+            conn.close();
+            ps.close();
+            rs.close();
+            return true;
         } else {
-            System.out.println("Username or Password incorrect");
+            System.out.println("Username or Password incorrect\n");
+            conn.close();
+            ps.close();
+            rs.close();
+            return false;
         }
-
-        conn.close();
-        ps.close();
-        rs.close();
     }
 
     // deletes a customer from the database

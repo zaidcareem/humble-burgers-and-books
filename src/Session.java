@@ -31,4 +31,8 @@ public class Session {
         this.signedIn = false;
         this.currentCustomer.signOut();
     }
+
+    public boolean getSignedIn() {
+        return this.signedIn;
+    }
 }

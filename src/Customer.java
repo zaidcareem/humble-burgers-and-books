@@ -5,6 +5,10 @@ import java.sql.SQLException;
 
 public class Customer extends User {
 
+    public Customer(String username) {
+        super(username);
+    }
+
     public Customer(String username, String password) {
         super(username, password);
     }
@@ -14,16 +18,32 @@ public class Customer extends User {
         Database db = new Database();
         Connection conn = db.getConnection();
 
-        String sqlQuery = "INSERT INTO customers VALUES(?, ?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sqlQuery);
-        ps.setString(1, this.username);
-        ps.setString(2, this.password);
-        ps.setFloat(3, 0);
+        // check whether username already exists
+        String checkQuery = "SELECT EXISTS(SELECT * FROM customers WHERE username = ?)";
+        PreparedStatement ps1 = conn.prepareStatement(checkQuery);
+        ps1.setString(1, this.username);
+        ResultSet rs1 = ps1.executeQuery();
 
-        ps.executeUpdate();
+        // if username exists
+        if (rs1.getInt(1) == 1) {
+            System.out.println("Username already exists, try another please.");
+            ps1.close();
+            rs1.close();
+        // if username does not exist
+        } else {
+            String sqlQuery = "INSERT INTO customers VALUES(?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ps.setString(1, this.username);
+            ps.setString(2, this.password);
+            ps.setFloat(3, 0);
+
+            System.out.println("Added customer " +  this.username + " to database.");
+
+            ps.executeUpdate();
+            ps.close();
+        }
 
         conn.close();
-        ps.close();
     }
 
     // customer Sign In
