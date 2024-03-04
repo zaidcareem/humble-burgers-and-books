@@ -37,7 +37,7 @@ public class Customer extends User {
             ps.setString(2, this.password);
             ps.setFloat(3, 0); // initial cumulative cost is always 0 (third column is cumulative cost)
 
-            System.out.println("Added customer " +  this.username + " to database.");
+            System.out.println("Customer " +  this.username + " SUCCESSFULLY registered.");
 
             ps.executeUpdate();
             ps.close();
@@ -61,7 +61,7 @@ public class Customer extends User {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-            System.out.println("Customer " + this.username + " is logged in.");
+            System.out.println("Customer " + this.username + " is signed in.");
             conn.close();
             ps.close();
             rs.close();
@@ -84,12 +84,16 @@ public class Customer extends User {
         ps.setString(1, this.username);
 
         ResultSet rs = ps.executeQuery();
+        float cumulativeExpense = 0;
 
+        if (rs.next()) {
+            cumulativeExpense = rs.getFloat(1);
+        }
         conn.close();
         ps.close();
         rs.close();
 
-        return rs.getFloat(1);
+        return cumulativeExpense;
     }
 
     // buy books, updates cumulative expense of customers here also
@@ -110,6 +114,9 @@ public class Customer extends User {
 
             // run the update query
             ps.executeUpdate();
+
+            System.out.println("Customer " + this.username + " bought the book titled " + book.getTitle());
+
 
             // update the CumulativeExpense on the customers table
             String expenseUpdateQuery = "Update customers SET CumulativeExpense = CumulativeExpense + ? WHERE username = ?";
@@ -150,6 +157,8 @@ public class Customer extends User {
             ps.executeUpdate();
 
             ps.close();
+
+            System.out.println("Customer " + this.username + " bought a " + burger.getType() + " burger");
 
             // update the CumulativeExpense on the customers table
             String expenseUpdateQuery = "Update customers SET CumulativeExpense = CumulativeExpense + ? WHERE username = ?";

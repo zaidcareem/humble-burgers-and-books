@@ -1,13 +1,22 @@
 create database bnbshop;
+
 use bnbshop;
-show tables;
+
+/*
 select * from customers;
-select * from admins;
+select * from admins; only 1 admin allowed
+select * from books;
+select * from burgers;
+*/
 
-INSERT INTO customers VALUES ('jeff', '123', 500);
+/*
+dear admin,
+	
+    run these queries with different values so that your shop is prosporous.
 
-SELECT EXISTS(SELECT * FROM books WHERE Title = 'knotting');
-SELECT EXISTS(SELECT * FROM customers WHERE username = 'zaid');
+INSERT INTO burgers VALUES ('Beef', 3, 400);
+INSERT INTO books VALUES ('Hunger Games', 5, 900);
+*/
 
 create table books (
     Title varchar(50) not null,

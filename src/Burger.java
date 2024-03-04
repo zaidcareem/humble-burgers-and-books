@@ -7,11 +7,6 @@ public class Burger extends Product {
         this.type = type;
     }
 
-    public Burger(float price, String type) {
-        super(price);
-        this.type = type;
-    }
-
     protected String getType() {
         return this.type;
     }
