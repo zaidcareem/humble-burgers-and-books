@@ -1,7 +1,5 @@
 ## BnBshop (burgers and books shop)
 
-***
-
 ### Customer functionality:
 
 <ul>
