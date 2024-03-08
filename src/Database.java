@@ -1,7 +1,7 @@
 /*
  * This is the class where we create the connection to our MySQL Database
  *
- *  -----> Assign your own credentials in lines 19 - 21 <-----
+ *  -----> Assign your own credentials in lines 18 - 20 <-----
  */
 
 import java.sql.Connection;
@@ -15,9 +15,9 @@ public class Database {
     public Database() {}
 
     public Connection getConnection() {
-        String user = "root";
-        String password = "Password"; //Please enter your database password to access the database
-        String databaseName = "bnbshop";
+        String user = "root"; // MySQL username
+        String password = "Password"; // MySQL password
+        String databaseName = "bnbshop"; // which database to be used, refer 'sql/runmefirst.sql' file
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); // register the driver
